@@ -43,7 +43,7 @@ echo "Configuring Qt build..."
   -skip qtnetworkauth,qtpurchasing,qtremoteobjects,qtscript,qtscxml,qtsensors \
   -skip qtserialbus,qtspeech,qttools,qttranslations,qtvirtualkeyboard,qtwayland \
   -skip qtwebchannel,qtwebview,qtwinextras,qtx11extras,qtxmlpatterns,qtwebengine,qtimageformats \
-  -- -DOPENSSL_ROOT_DIR="$OPENSSL_ROOT_DIR"
+  -- -DOPENSSL_ROOT_DIR="$OPENSSL_ROOT_DIR" -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64"
 
 # Build Qt
 echo "Building Qt..."
