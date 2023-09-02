@@ -20,15 +20,6 @@ Write-Output "Creating and entering the build directory..."
 New-Item -Path 'build' -ItemType Directory -Force
 Set-Location -Path 'build'
 
-$platform = $pwd.Path + "\dependencies\platform\windows"
-
-Write-Output "Cloning additional dependencies"
-git clone https://github.com/xpilot-project/dependencies.git
-
-Write-Output "Setting OPENSSL environment variable..."
-$openssl_root_dir = "$platform\openssl"
-$openssl_libs = "$platform\openssl\ssl.lib $platform\openssl\crypto.lib"
-
 # Setup VC tools
 $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
 $vcvarspath = &$vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
@@ -44,20 +35,18 @@ Get-Content "$env:temp\vcvars.txt" | Foreach-Object {
 
 Write-Output "Configuring Qt build..."
 & "..\configure.bat" -prefix "./install" -debug-and-release -static -static-runtime -confirm-license `
-  -feature-relocatable -qt-zlib -nomake examples -nomake tests -no-dbus -openssl-linked `
+  -feature-relocatable -qt-zlib -nomake examples -nomake tests -no-dbus -no-openssl `
   -skip qt3d,qtactiveqt,qtandroidextras,qtcanvas3d,qtcharts,qtconnectivity `
   -skip qtdatavis3d,qtdoc,qtgamepad,qtgraphicaleffects,qtlocation,qtmacextras `
   -skip qtnetworkauth,qtpurchasing,qtremoteobjects,qtscript,qtscxml,qtsensors `
   -skip qtserialbus,qtspeech,qttools,qttranslations,qtvirtualkeyboard,qtwayland `
-  -skip qtwebchannel,qtwebview,qtwinextras,qtx11extras,qtxmlpatterns,qtwebengine,qtimageformats `
-  -- -DOPENSSL_ROOT_DIR="$openssl_root_dir"
+  -skip qtwebchannel,qtwebview,qtwinextras,qtx11extras,qtxmlpatterns,qtwebengine,qtimageformats
 
 Write-Output "Build Qt..."
-cmake --build . --parallel
+cmake --build .
 
 Write-Output "Install Qt..."
-cmake --install . --config Debug
-cmake --install . --config Release
+cmake --install .
 
 Write-Output "Add files to 7z archive..."
 Set-Location install
