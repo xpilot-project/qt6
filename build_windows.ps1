@@ -56,7 +56,8 @@ Write-Output "Build Qt..."
 cmake --build . --parallel
 
 Write-Output "Install Qt..."
-cmake --install .
+cmake --install . --config Debug
+cmake --install . --config Release
 
 Write-Output "Add files to 7z archive..."
 Set-Location install

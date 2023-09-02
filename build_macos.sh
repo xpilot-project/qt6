@@ -47,7 +47,11 @@ echo "Configuring Qt build..."
 
 # Build Qt
 echo "Building Qt..."
-cmake --build . && cmake --install .
+cmake --build .
+
+echo "Installing Qt..."
+cmake --install . --config Debug
+cmake --install . --config Release
 
 # Add files to 7z archive
 cd install && 7z a macos *
