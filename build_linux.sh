@@ -15,7 +15,7 @@ sudo apt-get update && sudo apt-get install -y \
   libxkbcommon-dev libxkbcommon-x11-dev xorg-dev \
   libglu1-mesa-dev freeglut3-dev mesa-common-dev libglfw3-dev libgles2-mesa-dev \
   libpulse-dev
-
+  
 # Clone the Qt repository
 echo "Cloning the Qt repository..."
 git clone https://github.com/qt/qt5.git qt6 -b $1
@@ -39,10 +39,6 @@ git clone https://github.com/xpilot-project/dependencies.git
 echo "Setting OPENSSL_LIBS environment variable..."
 
 OPENSSL_ROOT_DIR="$(pwd)/dependencies/platform/linux/openssl"
-echo $OPENSSL_ROOT_DIR
-
-export OPENSSL_LIBS="$OPENSSL_ROOT_DIR/libssl.a $OPENSSL_ROOT_DIR/libcrypto.a"
-echo $OPENSSL_LIBS
 
 # Configure Qt build
 echo "Configuring Qt build..."
@@ -53,15 +49,15 @@ echo "Configuring Qt build..."
   -skip qtnetworkauth,qtpurchasing,qtremoteobjects,qtscript,qtscxml,qtsensors \
   -skip qtserialbus,qtspeech,qttools,qttranslations,qtvirtualkeyboard,qtwayland \
   -skip qtwebchannel,qtwebview,qtwinextras,qtx11extras,qtxmlpatterns,qtwebengine,qtimageformats \
-  -- -DOPENSSL_ROOT_DIR="$OPENSSL_ROOT_DIR"
+  -- -DOPENSSL_ROOT_DIR="$OPENSSL_ROOT_DIR" -DOPENSSL_USE_STATIC_LIBS=TRUE
 
 # Build Qt
 echo "Building Qt..."
 cmake --build .
 
+# Install Qt
 echo "Installing Qt..."
-cmake --install . --config Debug
-cmake --install . --config Release
+cmake --install .
 
 # Add files to 7z archive
 cd install && 7z a linux *
