@@ -37,13 +37,12 @@ git clone https://github.com/xpilot-project/dependencies.git
 
 # Set OPENSSL_LIBS environment variable
 echo "Setting OPENSSL_LIBS environment variable..."
-
 OPENSSL_ROOT_DIR="$(pwd)/dependencies/platform/linux/openssl"
 
 # Configure Qt build
 echo "Configuring Qt build..."
-../configure -prefix ./install -debug-and-release -static -confirm-license \
-  -feature-relocatable -qt-zlib -nomake examples -nomake tests -no-dbus -openssl-linked \
+../configure -prefix ./install -release -static -confirm-license \
+  -qt-pcre -qt-zlib -qt-libpng -qt-libjpeg -openssl-linked -no-pch -nomake tests -nomake examples \
   -skip qt3d,qtactiveqt,qtandroidextras,qtcanvas3d,qtcharts,qtconnectivity \
   -skip qtdatavis3d,qtdoc,qtgamepad,qtgraphicaleffects,qtlocation,qtmacextras \
   -skip qtnetworkauth,qtpurchasing,qtremoteobjects,qtscript,qtscxml,qtsensors \
@@ -53,7 +52,7 @@ echo "Configuring Qt build..."
 
 # Build Qt
 echo "Building Qt..."
-cmake --build .
+cmake --build . --parallel
 
 # Install Qt
 echo "Installing Qt..."
